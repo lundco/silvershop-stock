@@ -22,26 +22,6 @@ class ProductStockExtension extends DataExtension
 
     private static $allow_out_of_stock_purchase = false;
 
-    public function requireDefaultRecords(){
-        parent::requireDefaultRecords();
-
-        $oldStocks = ProductWarehouseStock::get()
-                    ->filter('Quantity','-1');
-
-        foreach ($oldStocks as $stock){
-            $className = $stock->ProductClass;
-
-            $product = $className::get()->byID($stock->ProductID);
-            if($product){
-                $product->UnlimitedStock = 1;
-                $product->write();
-
-                $stock->Quantity = 0;
-                $stock->write();
-            }
-        }
-    }
-
     public function updateCMSFields(FieldList $fields)
     {
         if ($this->hasVariations()) {
